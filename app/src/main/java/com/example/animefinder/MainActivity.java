@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -50,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
                 EditText et = findViewById(R.id.queryText);
                 String query = et.getText().toString();
                 parseJSON(query);
+                et.setText("");
             }
         });
     }
@@ -64,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(JSONObject response) {
                 try {
+                    closeKeyboard();
                     JSONArray array = response.getJSONArray("data");
 
                     for(int i = 0; i < array.length(); i++) {
@@ -79,7 +82,6 @@ public class MainActivity extends AppCompatActivity {
                         String imageURL = webp.getString("image_url");
 
                         mAnimeList.add(new AnimeItem(imageURL, title, synopsis));
-                        closeKeyboard();
                     }
 
                     mItemAdapter = new ItemAdapter(MainActivity.this, mAnimeList);
@@ -87,6 +89,10 @@ public class MainActivity extends AppCompatActivity {
 
                 } catch (JSONException e) {
                     e.printStackTrace();
+                }
+                if (mAnimeList.size() == 0)
+                {
+                    Toast.makeText(getBaseContext(), "No matches", Toast.LENGTH_LONG).show();
                 }
             }
         }, new Response.ErrorListener() {
@@ -106,6 +112,5 @@ public class MainActivity extends AppCompatActivity {
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
-
 
 }
