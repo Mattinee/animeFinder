@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">animeFinder</string>
+    <string name="submit_button">Go</string>
 </resources>
